@@ -1,0 +1,7 @@
+bin
+documents
+driver_lib
+hello
+*.bin
+xtensa-lx106-elf
+third_party
