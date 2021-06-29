@@ -24,18 +24,94 @@
 
 #include "ets_sys.h"
 #include "osapi.h"
+#include "driver/hw_timer.h"
+#include "user_interface.h"
+
+int timer_armed = 0;
+
+#define EAGLE_FLASH_BIN_ADDR          (SYSTEM_PARTITION_CUSTOMER_BEGIN + 1)
+#define EAGLE_IROM0TEXT_BIN_ADDR          (SYSTEM_PARTITION_CUSTOMER_BEGIN + 2)
+
+#if ((SPI_FLASH_SIZE_MAP == 0) || (SPI_FLASH_SIZE_MAP == 1))
+#error "The flash map is not supported"
+#elif (SPI_FLASH_SIZE_MAP == 2)
+#define SYSTEM_PARTITION_OTA_SIZE							0x6A000
+#define SYSTEM_PARTITION_OTA_2_ADDR							0x81000
+#define SYSTEM_PARTITION_RF_CAL_ADDR						0xfb000
+#define SYSTEM_PARTITION_PHY_DATA_ADDR						0xfc000
+#define SYSTEM_PARTITION_SYSTEM_PARAMETER_ADDR				0xfd000
+#define SYSTEM_PARTITION_CUSTOMER_PRIV_PARAM_ADDR           0x7c000
+#elif (SPI_FLASH_SIZE_MAP == 3)
+#define SYSTEM_PARTITION_OTA_SIZE							0x6A000
+#define SYSTEM_PARTITION_OTA_2_ADDR							0x81000
+#define SYSTEM_PARTITION_RF_CAL_ADDR						0x1fb000
+#define SYSTEM_PARTITION_PHY_DATA_ADDR						0x1fc000
+#define SYSTEM_PARTITION_SYSTEM_PARAMETER_ADDR				0x1fd000
+#define SYSTEM_PARTITION_CUSTOMER_PRIV_PARAM_ADDR           0x7c000
+#elif (SPI_FLASH_SIZE_MAP == 4)
+#define SYSTEM_PARTITION_OTA_SIZE							0x6A000
+#define SYSTEM_PARTITION_OTA_2_ADDR							0x81000
+#define SYSTEM_PARTITION_RF_CAL_ADDR						0x3fb000
+#define SYSTEM_PARTITION_PHY_DATA_ADDR						0x3fc000
+#define SYSTEM_PARTITION_SYSTEM_PARAMETER_ADDR				0x3fd000
+#define SYSTEM_PARTITION_CUSTOMER_PRIV_PARAM_ADDR           0x7c000
+#elif (SPI_FLASH_SIZE_MAP == 5)
+#define SYSTEM_PARTITION_OTA_SIZE							0x6A000
+#define SYSTEM_PARTITION_OTA_2_ADDR							0x101000
+#define SYSTEM_PARTITION_RF_CAL_ADDR						0x1fb000
+#define SYSTEM_PARTITION_PHY_DATA_ADDR						0x1fc000
+#define SYSTEM_PARTITION_SYSTEM_PARAMETER_ADDR				0x1fd000
+#define SYSTEM_PARTITION_CUSTOMER_PRIV_PARAM_ADDR           0xfc000
+#elif (SPI_FLASH_SIZE_MAP == 6)
+#define SYSTEM_PARTITION_OTA_SIZE							0x6A000
+#define SYSTEM_PARTITION_OTA_2_ADDR							0x101000
+#define SYSTEM_PARTITION_RF_CAL_ADDR						0x3fb000
+#define SYSTEM_PARTITION_PHY_DATA_ADDR						0x3fc000
+#define SYSTEM_PARTITION_SYSTEM_PARAMETER_ADDR				0x3fd000
+#define SYSTEM_PARTITION_CUSTOMER_PRIV_PARAM_ADDR           0xfc000
+#else
+#error "The flash map is not supported"
+#endif
+
+static const partition_item_t partition_table[] = {
+    { EAGLE_FLASH_BIN_ADDR, 0x00000, 0x10000 },
+    { EAGLE_IROM0TEXT_BIN_ADDR, 0x10000, 0x60000},
+    { SYSTEM_PARTITION_RF_CAL, SYSTEM_PARTITION_RF_CAL_ADDR, 0x1000 },
+    { SYSTEM_PARTITION_PHY_DATA, SYSTEM_PARTITION_PHY_DATA_ADDR, 0x1000 },
+    { SYSTEM_PARTITION_SYSTEM_PARAMETER, SYSTEM_PARTITION_SYSTEM_PARAMETER_ADDR, 0x3000},
+};
 
 void ICACHE_FLASH_ATTR
 user_pre_init(void) {
-    uart_div_modify(0,UART_CLK_FREQ/9600);
+    if(!system_partition_table_regist(partition_table, sizeof(partition_table)/sizeof(partition_table[0]),SPI_FLASH_SIZE_MAP)) {
+		os_printf("system_partition_table_regist fail\r\n");
+		while(1);
+	}
+    int i;
+    int a = 8;
+    for( i = 0; i < 10; i++) {
+        a -= 3;
+    }
+    uart_div_modify(0,UART_CLK_FREQ/74880);
+
+}
+
+void hw_timer_test_cb(void) {
+    os_printf("Timer test");
+    timer_armed = 0;
 }
 
 void ICACHE_FLASH_ATTR
 user_init(void)
 {
+    os_printf("Entry to main...");
+    hw_timer_init(FRC1_SOURCE, 1);
+    hw_timer_set_func(hw_timer_test_cb);
     os_printf("SDK test");
     while (1) {
-        
+        if(timer_armed == 0) {
+            hw_timer_arm(1000000);
+            timer_armed = 1;
+        }
     }
 }
-

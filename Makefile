@@ -222,7 +222,7 @@ CCFLAGS += 			\
 	-fno-guess-branch-probability \
 	-freorder-blocks-and-partition \
 	-fno-cse-follow-jumps \
-	-ggdbb  \
+	-ggdb  \
 	-Og
 #	-Wall			
 
