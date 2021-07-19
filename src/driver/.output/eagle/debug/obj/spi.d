@@ -23,6 +23,5 @@
  ../../include/eagle_soc.h ../../include/c_types.h \
  ../../include/os_type.h ../../include/spi_flash.h \
  ../../driver_lib/include/driver/spi_overlap.h ../../include/gpio.h \
- ../../include/user_interface.h ../../include/ip_addr.h \
- ../../include/queue.h ../../include/spi_flash.h ../../include/gpio.h \
- ../../include/mem.h
+ ../include/user_interface.h ../../include/ip_addr.h \
+ ../../include/queue.h ../include/user_config.h ../../include/mem.h

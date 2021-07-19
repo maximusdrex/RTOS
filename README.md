@@ -1,10 +1,11 @@
 # Max's RTOS (TITLE PENDING)
 
+
 # Overview
 
+
 # Schedule
-
-* Week 1 (June 28): Scheduler
-    * Pre-emptive, round robin scheduler
-* Week 2 (July 5): 
-
+* This week: finish scheduler
+* Next week: memory managament
+* After: further disentanglement from NON_OS_SDK, linkning with tcp/ip stack
+* Further: building application

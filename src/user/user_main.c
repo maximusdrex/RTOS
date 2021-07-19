@@ -87,13 +87,8 @@ user_pre_init(void) {
 		os_printf("system_partition_table_regist fail\r\n");
 		while(1);
 	}
-    int i;
-    int a = 8;
-    for( i = 0; i < 10; i++) {
-        a -= 3;
-    }
-    uart_div_modify(0,UART_CLK_FREQ/74880);
-
+    //115200 is the default frequency
+    uart_div_modify(0,UART_CLK_FREQ/115200);
 }
 
 void hw_timer_test_cb(void) {
@@ -107,11 +102,11 @@ user_init(void)
     os_printf("Entry to main...");
     hw_timer_init(FRC1_SOURCE, 1);
     hw_timer_set_func(hw_timer_test_cb);
-    os_printf("SDK test");
     while (1) {
         if(timer_armed == 0) {
             hw_timer_arm(1000000);
             timer_armed = 1;
+            system_soft_wdt_feed();
         }
     }
 }

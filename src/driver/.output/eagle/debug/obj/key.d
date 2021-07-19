@@ -18,6 +18,6 @@
  /home/max/Documents/Coding/esp/sdk/xtensa-lx106-elf/xtensa-lx106-elf/include/sys/cdefs.h \
  /home/max/Documents/Coding/esp/sdk/xtensa-lx106-elf/xtensa-lx106-elf/include/sys/string.h \
  ../../include/os_type.h ../include/user_config.h ../../include/mem.h \
- ../../include/gpio.h ../../include/user_interface.h \
- ../../include/ip_addr.h ../../include/queue.h ../../include/spi_flash.h \
- ../../include/gpio.h ../include/driver/key.h
+ ../../include/gpio.h ../include/user_interface.h ../../include/ip_addr.h \
+ ../../include/queue.h ../include/user_config.h ../../include/spi_flash.h \
+ ../include/driver/key.h
