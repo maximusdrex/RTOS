@@ -1,4 +1,4 @@
-# Max's RTOS (TITLE PENDING)
+# Max's RTOS
 
 # Overview
 
