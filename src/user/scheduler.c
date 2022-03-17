@@ -1,10 +1,10 @@
 
 #include "task_queue.h"
 
-extern void return_context(int pc, int ps, int a0, int a1);
+extern void restore_context(int pc, int ps, int a0, int a1);
 
 void runTask(Task t) {
-    return_context(t.PC, t.PS, t.registers[0], t.registers[1]);
+    restore_context(t.PC, t.PS, t.registers[0], t.registers[1]);
 }
 
 // Called at the beginning of each quanta to run the next task

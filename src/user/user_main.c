@@ -81,6 +81,14 @@ static const partition_item_t partition_table[] = {
     { SYSTEM_PARTITION_SYSTEM_PARAMETER, SYSTEM_PARTITION_SYSTEM_PARAMETER_ADDR, 0x3000},
 };
 
+int ledArr[484][3];
+
+enum color {
+    g = 0,
+    r = 1,
+    b = 2
+};
+
 void ICACHE_FLASH_ATTR
 user_pre_init(void) {
     if(!system_partition_table_regist(partition_table, sizeof(partition_table)/sizeof(partition_table[0]),SPI_FLASH_SIZE_MAP)) {
@@ -92,6 +100,7 @@ user_pre_init(void) {
 }
 
 void hw_timer_test_cb(void) {
+    asm("break 1, 2");
     os_printf("Timer test");
     timer_armed = 0;
 }
@@ -99,14 +108,32 @@ void hw_timer_test_cb(void) {
 void ICACHE_FLASH_ATTR
 user_init(void)
 {
-    os_printf("Entry to main...");
+    
+    /*asm volatile (\
+                "wsr  %0, vecbase\n" \
+                ::"r"(0x40100100));
+                */
+    //os_printf("Entry to main...");
     hw_timer_init(FRC1_SOURCE, 1);
+    
+
+    asm("movi a2, 0x40100100");
+    asm("wsr a2, VECBASE");
+
+    //asm("break 1, 2");
+    
     hw_timer_set_func(hw_timer_test_cb);
     while (1) {
         if(timer_armed == 0) {
-            hw_timer_arm(1000000);
             timer_armed = 1;
-            system_soft_wdt_feed();
+            hw_timer_arm(10000);
         }
+        system_soft_wdt_feed();
     }
+
+    int i;
+    for (i = 0; i < sizeof(ledArr); i++) {
+        
+    }
+    
 }

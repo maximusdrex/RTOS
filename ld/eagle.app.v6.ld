@@ -25,6 +25,12 @@ EXTERN(_DoubleExceptionVector)
 EXTERN(_KernelExceptionVector)
 EXTERN(_NMIExceptionVector)
 EXTERN(_UserExceptionVector)
+EXTERN(_MaxDebugExceptionVector)
+EXTERN(_MaxDoubleExceptionVector)
+EXTERN(_MaxKernelExceptionVector)
+EXTERN(_MaxNMIExceptionVector)
+EXTERN(_MaxUserExceptionVector)
+
 PROVIDE(_memmap_vecbase_reset = 0x40000000);
 /* Various memory-map dependent cache attribute settings: */
 _memmap_cacheattr_wb_base = 0x00000110;
@@ -199,6 +205,33 @@ SECTIONS
     LONG(0)
     . = ALIGN(16);
     *(.DoubleExceptionVector.text)
+    LONG(0)
+    LONG(0)
+    LONG(0)
+    LONG(0)
+    . = ALIGN (16);
+    . = 0x110;
+    *(.MaxDebugExceptionVector.text)
+    /*. = ALIGN(16);*/
+    . = 0x120;
+    *(.MaxNMIExceptionVector.text)
+    /*. = ALIGN(16); */
+    . = 0x130;
+    *(.MaxKernelExceptionVector.text)
+    /* LONG(0)
+    LONG(0)
+    LONG(0)
+    LONG(0)
+    . = ALIGN(16); */
+    . = 0x150;
+    *(.MaxUserExceptionVector.text)
+    /* LONG(0)
+    LONG(0)
+    LONG(0)
+    LONG(0) 
+    . = ALIGN(16); */
+    . = 0x170;
+    *(.MaxDoubleExceptionVector.text)
     LONG(0)
     LONG(0)
     LONG(0)

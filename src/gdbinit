@@ -1,5 +1,6 @@
 target remote :3333
-set remote hardware-watchpoint-limit 1 
+set remote hardware-watchpoint-limit 2 
+file  .output/eagle/debug/image/eagle.app.v6.out
 mon reset halt
 flushregs
 
